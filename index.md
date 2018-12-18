@@ -7,6 +7,7 @@ REST API for managing stacks and sites on ScaleDynamix platform
 Include your API key in request header 'Key; 
 
     curl -H "Key: $KEY" https://api.scaledynamix.com/v1/sites
+
 API keys can be found at https://platform.scaledynamix.com/settings
 
 # Endpoint
