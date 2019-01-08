@@ -140,6 +140,7 @@ CMS Types
 | 3 | WordPress Multisite (Subdirectories) | 
 | 4 | WooCommerce | 
 | 5 | PHP / HTML |
+| 9 | Clone another site |
 
 cURL (Example)
 
@@ -183,6 +184,7 @@ Response
         "success": true,
         "errors": []
     }
+    
 ## List site metadata
 
 Returns wp-admin and ssh credentials of specified site along with site tags, domains and git origin.
@@ -226,7 +228,9 @@ Response
 
 ## Copy data from another site
 
-Copies data from another site to specified site. Used for staging operations. If .clone.sh script is present in source site's web root (public_html), it will be executed on destination site after staging operation.
+Copies data from another site to specified site and updates WordPress siteurl, home values in the database. Used for staging operations. 
+
+If .clone.sh script is present in source site's web root (public_html), it will be executed on destination site after staging operation.
 
 	PUT /v1/sites/:site_id
 	
@@ -422,7 +426,7 @@ Response
     }
 
 ## Change primary domain of a site
-Changes the primary domain from a site and updates WordPress siteurl, home values from the database
+Changes the primary domain from a site and updates WordPress siteurl, home values in the database.
 
 	PUT /v1/domains/:site_id
 	
