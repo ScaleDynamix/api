@@ -90,7 +90,7 @@ Parameters
 | Parameter | Description |
 | ------ | ------ |
 | name | Unique name for the new site. (Required) |
-| vps_id | Server ID where this site needs to be created. (Required) |
+| server_id | Server ID where this site needs to be created. (Required) |
 | type | CMS Type for the new site. (Required) |
 | clonesourceid | Site ID to clone data from (Required for site type 9) |
 
@@ -107,7 +107,7 @@ CMS Types
 
 cURL (Example)
 
-    curl -H "Key: $KEY" https://api.nestify.io/v1/sites -X POST -d "name=MyWPSite&stack_id=32&type=1"
+    curl -H "Key: $KEY" https://api.nestify.io/v1/sites -X POST -d "name=MyWPSite&server_id=32&type=1"
 
 Response
 
@@ -183,6 +183,11 @@ Response
                 "domains": [],
                 "tags": [],
                 "git-origin": "ssh:\/\/sitemanager@8.183.96.3:40745\/~\/git"
+		"stats": {
+                "bandwidth": 16,
+                "pageviews": 1725,
+                "storage": 1
+                }
             }
         ],
         "success": true,
@@ -433,6 +438,275 @@ Response
     {
         "result": {
             "id": "12"
+        },
+        "success": true,
+        "errors": []
+    }
+
+
+## List all backups of a site
+
+Lists all backups
+
+	GET /v1/backups/:siteid
+
+Parameters: None
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/backups/52
+
+Response
+
+    {
+        "result": {
+            "backups": [
+                {
+                    "id": "11",
+                    "backup": "Scheduled Backup",
+                    "created": "2021-09-08 11:03:38"
+                },
+                {
+                    "id": "10",
+                    "backup": "Pre-update-backup",
+                    "created": "2021-09-07 11:03:38"
+                }
+            ]
+        },
+        "success": true,
+        "errors": []
+    }
+
+## Create a new backup
+
+Create a new backup with specified name.
+
+	POST /v1/backups/:site_id
+	
+Parameters
+
+| Parameter | Description |
+| ------ | ------ |
+| name | Name of the backup. (Required) |
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/backups/52 -X POST -d "name=pre-update-backup"
+
+Response
+
+    {
+        "result": {
+            "status": "in_progress"
+        },
+        "success": true,
+        "errors": []
+    }
+
+## Restore a backup
+Restores the specified backup.
+
+	PUT /v1/backups/:site_id
+	
+Parameters
+
+| Parameter | Description |
+| ------ | ------ |
+| backup_id | ID of backup to be restored. (Required) |
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/backups/52 -X PUT -d "backup_id=11"
+
+Response
+
+    {
+        "result": {
+            "status": "in_progress"
+        },
+        "success": true,
+        "errors": []
+    }
+
+
+## Download a backup
+Restores the specified backup.
+
+	GET /v1/downloadbackup/:backup_id
+	
+Parameters
+
+| Parameter | Description |
+| ------ | ------ |
+| backup_id | ID of backup to be downloaded. (Required) |
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/downloadbackup/52
+
+Response
+
+    {
+        "result": {
+            "download_url": "https://s3.amazonaws.com/backups/43537653463456.tar.gz"
+        },
+        "success": true,
+        "errors": []
+    }
+
+## Reset file permissions
+
+	GET /v1/resetpermissions/:siteid
+
+Parameters: None
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/resetpermissions/52
+
+Response
+
+    {
+        "result": {
+            "status": "processing"
+        },
+        "success": true,
+        "errors": []
+    }
+
+## Restart Web Services (Nginx and PHP)
+
+	GET /v1/restartwebservices/:siteid
+
+Parameters: None
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/resetpermissions/52
+
+Response
+
+    {
+        "result": {
+            "status": "processing"
+        },
+        "success": true,
+        "errors": []
+    }
+
+## Purge full page cache
+
+	GET /v1/purgecache/:siteid
+
+Parameters: None
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/purgecache/52
+
+Response
+
+    {
+        "result": {
+            "status": "processing"
+        },
+        "success": true,
+        "errors": []
+    }
+    
+## Wp-admin auto login 
+
+	GET /v1/wplogin/:siteid
+
+Parameters: None
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/wplogin/52
+
+Response
+
+    {
+        "result": {
+            "login_url": "https:\/\/www.mysite.com\/5d184112\/b0dbb6-2f2c5d-56c400de09"
+        },
+        "success": true,
+        "errors": []
+    }
+    
+## Suspend a site
+
+This option redirects a website to the specified url.
+
+	POST /v1/backups/:site_id
+	
+Parameters
+
+| Parameter | Description |
+| ------ | ------ |
+| url | Url of the suspended page including https://. (Required) |
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/suspend/52 -X POST -d "url=https://myagency.com/site-suspended/"
+
+Response
+
+    {
+        "result": {
+            "status": "in_progress"
+        },
+        "success": true,
+        "errors": []
+    }
+
+
+## Unsuspend a site
+
+This option removes suspension redirects from a website.
+
+	GET /v1/unsuspend/:site_id
+	
+Parameters: None
+
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/unsuspend/52
+
+Response
+
+    {
+        "result": {
+            "status": "in_progress"
+        },
+        "success": true,
+        "errors": []
+    }
+
+## Update site limits
+
+This option updates various site limits, such as bandwidth, storage, pageviews.
+
+	POST /v1/updatesitelimits/:site_id
+	
+Parameters
+
+| Parameter | Description |
+| ------ | ------ |
+| limits[bw] | Bandwidth limit per month in GB (Required) |
+| limits[visits] | Pageview limit per month (Required) |
+| limits[storage] | Disk space limit in GB (Required) |
+
+cURL (Example)
+
+    curl -H "Key: $KEY" https://api.nestify.io/v1/suspend/52 -X POST -d "limits[bw]=1000" -d "limits[visits]=9000" -d "limits[storage]=10"
+
+Response
+
+    {
+        "result": {
+            "status": "in_progress"
         },
         "success": true,
         "errors": []
